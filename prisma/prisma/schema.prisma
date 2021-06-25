@@ -1,0 +1,73 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Product {
+  id                   Int              @id @default(autoincrement())
+  createdAt            DateTime         @default(now())
+  updatedAt            DateTime         @updatedAt
+  name                 String           @db.VarChar(255)
+  cartName             String           @db.VarChar(255)
+  description          String
+  features             String
+  cartImage            String           @db.VarChar(255)
+  galleryImageMobile1  String           @db.VarChar(255)
+  galleryImageMobile2  String           @db.VarChar(255)
+  galleryImageMobile3  String           @db.VarChar(255)
+  galleryImageTablet1  String           @db.VarChar(255)
+  galleryImageTablet2  String           @db.VarChar(255)
+  galleryImageTablet3  String           @db.VarChar(255)
+  galleryImageDesktop1 String           @db.VarChar(255)
+  galleryImageDesktop2 String           @db.VarChar(255)
+  galleryImageDesktop3 String           @db.VarChar(255)
+  mainImageMobile      String           @db.VarChar(255)
+  mainImageTablet      String           @db.VarChar(255)
+  mainImageDesktop     String           @db.VarChar(255)
+  price                Int
+  slug                 String           @unique
+  new                  Boolean          @default(false)
+  recommendations      Recommendation[]
+  includedItems        IncludedItem[]
+  category             Category         @relation(fields: [categoryId], references: [id])
+  categoryId           Int
+}
+
+model Category {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  name      String    @db.VarChar(255)
+  image     String    @db.VarChar(255)
+  Product   Product[]
+}
+
+model IncludedItem {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String   @db.VarChar(255)
+  quantity  Int
+  Product   Product? @relation(fields: [productId], references: [id])
+  productId Int?
+}
+
+model Recommendation {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String   @db.VarChar(255)
+  imageMobile     String   @db.VarChar(255)
+  imageTablet     String   @db.VarChar(255)
+  imageDesktop     String   @db.VarChar(255)
+  slug      String   @db.VarChar(255)
+  Product   Product? @relation(fields: [productId], references: [id])
+  productId Int?
+}
