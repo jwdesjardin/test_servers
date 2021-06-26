@@ -10,6 +10,7 @@ export const getProductBySlug = asyncHandler(async (req, res) => {
 		include: {
 			recommendations: true,
 			includedItems: true,
+			category: true,
 		},
 	})
 	if (product) {

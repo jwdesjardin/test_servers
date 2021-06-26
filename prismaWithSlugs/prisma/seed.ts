@@ -5,11 +5,11 @@ import myData from '../data.json'
 const categorySwitch = (categorySTR: string) => {
 	switch (categorySTR) {
 		case 'earphones':
-			return 1
+			return 7
 		case 'headphones':
-			return 2
+			return 8
 		case 'speakers':
-			return 3
+			return 9
 		default:
 			return 0
 	}
