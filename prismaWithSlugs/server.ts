@@ -13,9 +13,9 @@ express.json()
 app.use(cors())
 
 import {
-	getCategoryById,
+	getCategoryProductsBySlug,
 	getCategorySlugs,
-	getProductsById,
+	getProductBySlug,
 	getProductSlugs,
 } from './controllers/products'
 
@@ -31,8 +31,8 @@ app.get('/', (req, res) => {
 
 app.get('/product/slugs', getProductSlugs)
 app.get('/category/slugs', getCategorySlugs)
-app.get('/product/:id', getProductsById)
-app.get('/category/:id', getCategoryById)
+app.get('/product/:slug', getProductBySlug)
+app.get('/category/:slug', getCategoryProductsBySlug)
 
 const PORT = process.env.PORT || 5000
 
