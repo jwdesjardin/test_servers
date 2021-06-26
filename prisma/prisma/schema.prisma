@@ -12,6 +12,7 @@ generator client {
 
 model Product {
   id                   Int              @id @default(autoincrement())
+  slug                 String           @unique
   createdAt            DateTime         @default(now())
   updatedAt            DateTime         @updatedAt
   name                 String           @db.VarChar(255)
@@ -32,7 +33,6 @@ model Product {
   mainImageTablet      String           @db.VarChar(255)
   mainImageDesktop     String           @db.VarChar(255)
   price                Int
-  slug                 String           @unique
   new                  Boolean          @default(false)
   recommendations      Recommendation[]
   includedItems        IncludedItem[]
@@ -45,6 +45,7 @@ model Category {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   name      String    @db.VarChar(255)
+  slug      String    @unique @default("")
   image     String    @db.VarChar(255)
   Product   Product[]
 }
