@@ -5,11 +5,11 @@ import myData from '../data.json'
 const categorySwitch = (categorySTR: string) => {
 	switch (categorySTR) {
 		case 'earphones':
-			return 7
+			return 1
 		case 'headphones':
-			return 8
+			return 2
 		case 'speakers':
-			return 9
+			return 3
 		default:
 			return 0
 	}
@@ -29,7 +29,7 @@ const seedingFunction = async () => {
 				cartName: product.name.split(' ')[0],
 				description: product.description,
 				features: product.features,
-				cartImage: `./assets/cart/image-${product.slug}.jpg`,
+				cartImage: `/assets/cart/image-${product.slug}.jpg`,
 				galleryImageDesktop1: product.gallery.first.desktop,
 				galleryImageDesktop2: product.gallery.second.desktop,
 				galleryImageDesktop3: product.gallery.third.desktop,
