@@ -9,7 +9,8 @@ import {
 } from './controllers/products'
 
 import connectDB from './lib/db'
-import { authUser, getUserProfile, registerUser, updateUserProfile } from './controllers/users'
+import { authUser, registerUser } from './controllers/users'
+import { errorHandler, notFound } from './lib/error'
 
 dotenv.config()
 
@@ -40,12 +41,14 @@ app.get('/category/:slug', getCategoryProductsBySlug)
 connectDB()
 
 // authentication routes
-app.get('/users/profile', getUserProfile)
-app.put('/users/profile', updateUserProfile)
 app.post('/users/login', authUser)
 app.post('/users/', registerUser)
 
 const PORT = process.env.PORT || 5000
+
+app.use(notFound)
+
+app.use(errorHandler)
 
 app.listen(PORT, () => {
 	console.log(`Server is listening on port ${PORT}`)
