@@ -20,10 +20,8 @@ model Order {
   cartItems      CartItem[]
   customerInfo   CustomerInfo @relation(fields: [customerInfoId], references: [id])
   paymentMethod  String
-  emoneyNumber   String
-  emoneyPin      String
-  // either a mongo ID or 'guest'
-  userID         String
+  emoneyNumber   String?
+  emoneyPin      String?
   customerInfoId Int
 }
 
@@ -38,6 +36,8 @@ model CustomerInfo {
   zip       String
   city      String
   country   String
+  // either a mongo ID or 'guest'
+  userID    String?
   Order     Order[]
 }
 
@@ -46,7 +46,7 @@ model CartItem {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   quantity  Int
-  item      Product  @relation(fields: [productId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id])
   Order     Order?   @relation(fields: [orderId], references: [id])
   orderId   Int?
   productId Int
