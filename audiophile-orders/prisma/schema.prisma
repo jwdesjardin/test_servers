@@ -1,0 +1,65 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Order {
+  id             Int          @id @default(autoincrement())
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  subtotal       Float
+  vaTax          Float
+  grandTotal     Float
+  cartItems      CartItem[]
+  customerInfo   CustomerInfo @relation(fields: [customerInfoId], references: [id])
+  paymentMethod  String
+  emoneyNumber   String
+  emoneyPin      String
+  // either a mongo ID or 'guest'
+  userID         String
+  customerInfoId Int
+}
+
+model CustomerInfo {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String
+  email     String
+  phone     String
+  address   String
+  zip       String
+  city      String
+  country   String
+  Order     Order[]
+}
+
+model CartItem {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  quantity  Int
+  item      Product  @relation(fields: [productId], references: [id])
+  Order     Order?   @relation(fields: [orderId], references: [id])
+  orderId   Int?
+  productId Int
+}
+
+model Product {
+  id        Int        @id @default(autoincrement())
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  cartImage String
+  slug      String     @unique
+  price     Float
+  name      String
+  cartName  String
+  CartItem  CartItem[]
+}
