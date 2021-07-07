@@ -1,7 +1,8 @@
 import express from 'express'
 import dotenv from 'dotenv'
 import cors from 'cors'
-import { postAnOrder } from './controllers/order'
+import { postAnOrder, getAllOrders } from './controllers/order'
+import { getAllCustomers } from './controllers/customer'
 
 dotenv.config()
 
@@ -20,7 +21,9 @@ app.get('/', (req, res) => {
 // order Routes
 
 app.post('/order', postAnOrder)
-// app.get('/order', getAllOrders)
+app.get('/order', getAllOrders)
+
+app.get('/customer', getAllCustomers)
 
 // app.get('/order/:id', getUsersOrder)
 
