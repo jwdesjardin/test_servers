@@ -33,35 +33,38 @@ interface DbOrder {
 
 export const postAnOrder = asyncHandler(async (req, res) => {
 	try {
-		const { order }: { order: DbOrder } = req.body
+		const order: DbOrder = req.body
 
 		const customerId = order.customerInfo.userID
 		const returningCustomer = await prisma.customerInfo.findFirst({ where: { userID: customerId } })
 
 		const getCartItems = async () => {
-			const items = await order.cartItems.map(async (cartItem) => {
-				const itemID = cartItem.product.slug
-				const exsistingProduct = await prisma.product.findFirst({ where: { slug: itemID } })
-				if (exsistingProduct) {
-					return {
-						quantity: cartItem.quantity,
-						productId: exsistingProduct.id,
-					}
-				} else {
-					return {
-						quantity: cartItem.quantity,
-						product: {
-							create: {
-								cartImage: cartItem.product.cartImage,
-								cartName: cartItem.product.cartName,
-								name: cartItem.product.name,
-								price: cartItem.product.price,
-								slug: cartItem.product.slug,
+			const items = await Promise.all(
+				order.cartItems.map(async (cartItem) => {
+					const itemID = cartItem.product.slug
+					const exsistingProduct = await prisma.product.findFirst({ where: { slug: itemID } })
+
+					if (exsistingProduct) {
+						return {
+							quantity: cartItem.quantity,
+							productId: exsistingProduct.id,
+						}
+					} else {
+						return {
+							quantity: cartItem.quantity,
+							product: {
+								create: {
+									cartImage: cartItem.product.cartImage,
+									cartName: cartItem.product.cartName,
+									name: cartItem.product.name,
+									price: cartItem.product.price,
+									slug: cartItem.product.slug,
+								},
 							},
-						},
+						}
 					}
-				}
-			})
+				})
+			)
 
 			return {
 				cartItems: {
@@ -74,7 +77,7 @@ export const postAnOrder = asyncHandler(async (req, res) => {
 
 		if (returningCustomer) {
 			preppedOrder = {
-				cartItems: await getCartItems(),
+				...(await getCartItems()),
 				subtotal: order.subtotal,
 				vaTax: order.vaTax,
 				grandTotal: order.grandTotal,
@@ -83,7 +86,7 @@ export const postAnOrder = asyncHandler(async (req, res) => {
 			}
 		} else {
 			preppedOrder = {
-				cartItems: await getCartItems(),
+				...(await getCartItems()),
 				subtotal: order.subtotal,
 				vaTax: order.vaTax,
 				grandTotal: order.grandTotal,
@@ -111,17 +114,24 @@ export const postAnOrder = asyncHandler(async (req, res) => {
 			}
 		}
 		console.log('creating order', { data: preppedOrder })
-		const createdOrder = prisma.order.create({ data: preppedOrder })
+		const createdOrder = await prisma.order.create({ data: preppedOrder })
 		res.status(201)
 		res.send(createdOrder)
 	} catch (e) {
 		console.log('error order not created', e)
+		res.status(400)
+		throw new Error()
 	}
 })
 
-export const getAllOrders = asyncHandler((req, res) => {
+export const getAllOrders = asyncHandler(async (req, res) => {
 	try {
-		const allOrders = prisma.order.findMany()
+		const allOrders = await prisma.order.findMany({
+			include: {
+				cartItems: true,
+				customerInfo: true,
+			},
+		})
 		res.status(200)
 		res.send(allOrders)
 	} catch (e) {
