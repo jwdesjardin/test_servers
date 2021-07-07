@@ -16,6 +16,7 @@ export const registerUser = asyncHandler(async (req, res) => {
 
 	if (user) {
 		// 201 - user was created  - respond with user data plus generated token
+		console.log(user)
 		res.status(201).json({
 			_id: user._id,
 			name: user.name,
@@ -50,6 +51,3 @@ export const authUser = asyncHandler(async (req, res) => {
 		throw new Error('Invalid email or password')
 	}
 })
-
-export const getUserProfile = () => {}
-export const updateUserProfile = () => {}
