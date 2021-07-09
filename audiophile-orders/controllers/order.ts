@@ -2,6 +2,27 @@ import asyncHandler from 'express-async-handler'
 import { prisma } from '../prismaClient'
 import { DbOrder } from '../types'
 
+export const getUserOrders = asyncHandler(async (req, res) => {
+	try {
+		const { id } = req.params
+		const orders = await prisma.order.findMany({
+			where: { customerInfo: { userID: id } },
+			include: {
+				cartItems: {
+					include: {
+						product: true,
+					},
+				},
+				customerInfo: true,
+			},
+		})
+		res.status(200)
+		res.send(orders)
+	} catch (e) {
+		res.status(400)
+	}
+})
+
 export const postAnOrder = asyncHandler(async (req, res) => {
 	try {
 		const order: DbOrder = req.body

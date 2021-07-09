@@ -1,7 +1,7 @@
 import express from 'express'
 import dotenv from 'dotenv'
 import cors from 'cors'
-import { postAnOrder, getAllOrders } from './controllers/order'
+import { postAnOrder, getAllOrders, getUserOrders } from './controllers/order'
 import { getAllCustomers } from './controllers/customer'
 
 dotenv.config()
@@ -25,7 +25,7 @@ app.get('/order', getAllOrders)
 
 app.get('/customer', getAllCustomers)
 
-// app.get('/order/:id', getUsersOrder)
+app.get('/order/:id', getUserOrders)
 
 const PORT = process.env.PORT || 4000
 
