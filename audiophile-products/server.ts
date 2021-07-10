@@ -8,8 +8,6 @@ import {
 	getProductSlugs,
 } from './controllers/products'
 
-import connectDB from './lib/db'
-import { authUser, registerUser } from './controllers/users'
 import { errorHandler, notFound } from './lib/error'
 
 dotenv.config()
@@ -36,13 +34,6 @@ app.get('/product/slugs', getProductSlugs)
 app.get('/category/slugs', getCategorySlugs)
 app.get('/product/:slug', getProductBySlug)
 app.get('/category/:slug', getCategoryProductsBySlug)
-
-// connect auth db
-connectDB()
-
-// authentication routes
-app.post('/users/login', authUser)
-app.post('/users/', registerUser)
 
 const PORT = process.env.PORT || 5000
 
